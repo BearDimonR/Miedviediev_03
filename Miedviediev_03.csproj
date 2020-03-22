@@ -50,6 +50,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoolBoxType.cs" />
     <Compile Include="DataStorage\IDataStorage.cs" />
     <Compile Include="DataStorage\SerializedDataStorage.cs" />
     <Compile Include="FileFolderHelper.cs" />

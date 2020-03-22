@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
-        Title="Practice4" Height="550" Width="1000">
+        Title="Practice4" Height="650" Width="1000">
     <Grid>
         <ContentControl Name="ContentControl" 
                         Content="{Binding ContentControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"

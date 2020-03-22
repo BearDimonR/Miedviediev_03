@@ -2,7 +2,8 @@
 {
     public enum WesternZodiac
     {
-        Aries = 1,	
+        Empty,
+        Aries,	
         Taurus,
         Gemini,
         Cancer,

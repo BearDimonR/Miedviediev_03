@@ -5,11 +5,34 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels1="clr-namespace:Miedviediev_03.ViewModels"
              xmlns:sorting="clr-namespace:Miedviediev_03.Sorting"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:personVm="clr-namespace:Miedviediev_03.ViewModels.PersonVm"
+             xmlns:miedviediev03="clr-namespace:Miedviediev_03"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.DataContext>
         <viewModels1:DataGridVm />
     </UserControl.DataContext>
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="WesternZodiac" MethodName="GetValues"
+                            ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="personVm:WesternZodiac"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="ChineseZodiac" MethodName="GetValues"
+                            ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="personVm:ChineseZodiac"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="BoolBoxType" MethodName="GetValues"
+                            ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="miedviediev03:BoolBoxType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
     <StackPanel>
         <TextBlock FontSize="30"
                    FontStretch="Condensed"
@@ -19,7 +42,7 @@
         <StackPanel Orientation="Horizontal">
             <DataGrid Name="DataGrid"
                       SelectionMode="Single"
-                      Margin="30"
+                      Margin="30, 10, 10, 30"
                       Width="780"
                       Height="400"
                       ItemsSource="{Binding Persons, Mode=OneWay}"
@@ -40,7 +63,7 @@
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" sorting:DataGridSortBehaviour.SortField="Name" />
                     <DataGridTextColumn Header="Surname" Binding="{Binding Surname}" sorting:DataGridSortBehaviour.SortField="Surname"/>
                     <DataGridTextColumn Header="Email" Binding="{Binding Email}" sorting:DataGridSortBehaviour.SortField="Email"/>
-                    <DataGridTextColumn Header="Birthday" Binding="{Binding Birthday}" sorting:DataGridSortBehaviour.SortField="Birthday"/>
+                    <DataGridTextColumn Header="Birthday" Binding="{Binding Birthday, StringFormat=dd/MM/yyyy}" sorting:DataGridSortBehaviour.SortField="Birthday"/>
                     <DataGridCheckBoxColumn Header="IsBirthday" Binding="{Binding IsBirthday, Mode=OneWay}" sorting:DataGridSortBehaviour.SortField="IsBirthday"/>
                     <DataGridCheckBoxColumn Header="IsAdult" Binding="{Binding IsAdult, Mode=OneWay}" sorting:DataGridSortBehaviour.SortField="IsAdult"/>
                     <DataGridTextColumn Header="WesternZodiac" Binding="{Binding WesternZodiac}" sorting:DataGridSortBehaviour.SortField="WesternZodiac"/>
@@ -73,6 +96,69 @@
                     Save
                 </Button>
             </StackPanel>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Left"
+                    Width="1000">
+            <TextBox Margin="30,10,8,10"
+                     FontSize="14"
+                     Width="70"
+                     Height="25"
+                     MaxLength="20"
+                     Text="{Binding NameSearch, Mode=OneWayToSource}"/>
+            <TextBox Margin="10"
+                     Width="60"
+                     Height="25"
+                     FontSize="14"
+                     MaxLength="20"
+                     Text="{Binding SurnameSearch, Mode=OneWayToSource}"/>
+            <TextBox Margin="10"
+                     Width="110"
+                     Height="25"
+                     FontSize="14"
+                     MaxLength="20"
+                     Text="{Binding EmailSearch, Mode=OneWayToSource}"/>
+            <DatePicker Margin="10"
+                     Width="110"
+                     Height="25"
+                     FontSize="14"
+                     Text="{Binding DateSearch, Mode=OneWayToSource}"
+                     Validation.ErrorTemplate="{x:Null}"/>
+            <ComboBox Margin="10"
+                      Width="70"
+                      Height="25"
+                      FontSize="14"
+                      SelectedItem="{Binding IsBirthdaySearch, Mode=OneWayToSource}"
+                      SelectedIndex="2"
+                      ItemsSource="{Binding Source={StaticResource BoolBoxType}}"/>
+            <ComboBox Margin="10"
+                      Width="70"
+                      Height="25"
+                      FontSize="14"
+                      SelectedItem="{Binding IsAdultSearch, Mode=OneWayToSource}"
+                      SelectedIndex="2"
+                      ItemsSource="{Binding Source={StaticResource BoolBoxType}}"/>
+            <ComboBox Margin="10"
+                      Width="70"
+                      Height="25"
+                     FontSize="14"
+                      SelectedItem="{Binding WesternZodiacSearch, Mode=OneWayToSource}"
+                      SelectedIndex="0"
+                      ItemsSource="{Binding Source={StaticResource WesternZodiac}}"/>
+            <ComboBox Margin="10"
+                      Width="70"
+                      Height="25"
+                     FontSize="14"
+                      SelectedItem="{Binding ChineseZodiacSearch, Mode=OneWayToSource}"
+                      SelectedIndex="0"
+                     ItemsSource="{Binding Source={StaticResource ChineseZodiac}}"/>
+            <Button
+                Margin="32,15,10,10"
+                Width="90"
+                FontSize="25"
+                Command="{Binding FilterCommand, Mode=OneWay}">
+                Filter
+            </Button>
         </StackPanel>
     </StackPanel>
 </UserControl>

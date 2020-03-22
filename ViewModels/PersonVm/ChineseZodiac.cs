@@ -2,7 +2,8 @@
 {
     public enum ChineseZodiac
     {
-        Rat = 1,	
+        Empty,
+        Rat,	
         Ox,
         Tiger,
         Rabbit,

@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Miedviediev_03.Managers;
 using Miedviediev_03.Models;
+using Miedviediev_03.ViewModels.PersonVm;
 
 namespace Miedviediev_03.DataStorage
 {
@@ -24,10 +25,62 @@ namespace Miedviediev_03.DataStorage
                 _persons = new List<Person>();
             }
         }
-        public void SaveList(List<Person> persons)
+        public void SaveList()
         {
-            _persons = persons;
             SaveChanges();
+        }
+
+        public void AddPerson(Person person)
+        {
+            _persons.Add(person);
+        }
+
+        public void EditPerson(int index, Person person)
+        {
+            _persons.RemoveAt(index);
+            _persons.Insert(index, person);
+        }
+
+        public void RemovePerson(Person item)
+        {
+            _persons.Remove(item);
+        }
+
+        public List<Person> Filter
+        (string name, string surname, string email, DateTime birthday, BoolBoxType isBirthday, BoolBoxType isAdult,
+            WesternZodiac westernZodiac, ChineseZodiac chineseZodiac)
+        {
+            List<Person> filter = _persons.ToList();
+            if (name != string.Empty)
+            {
+                filter = filter.FindAll(x => x.Name.Contains(name));
+            }
+            if (filter.Count == 0) return new List<Person>();
+            if (surname != string.Empty)
+            {
+                filter = filter.FindAll(x => x.Surname.Contains(surname));
+            }
+            if (filter.Count == 0) return new List<Person>();
+            if (email != string.Empty)
+            {
+                filter = filter.FindAll(x => x.Email.Contains(email));
+            }
+            if (filter.Count == 0) return new List<Person>();
+            if (birthday != DateTime.MinValue) 
+                filter = filter.FindAll(x => x.Birthday <= birthday);
+            if (filter.Count == 0) return new List<Person>();
+            if(isAdult != BoolBoxType.Empty)
+                filter = filter.FindAll(x => x.IsAdult == (isAdult == BoolBoxType.True));
+            if (filter.Count == 0) return new List<Person>();
+            if(isBirthday != BoolBoxType.Empty)
+                filter = filter.FindAll(x => x.IsBirthday == (isBirthday == BoolBoxType.True));
+            if (filter.Count == 0) return new List<Person>();
+            if(chineseZodiac != ChineseZodiac.Empty)
+                filter = filter.FindAll(x => x.ChineseSign == chineseZodiac);
+            if (filter.Count == 0) return new List<Person>();
+            if (westernZodiac != WesternZodiac.Empty)
+                filter = filter.FindAll(x => x.WesternZodiac == westernZodiac);
+            return filter;
         }
 
         public List<Person> PersonsList => _persons.ToList();

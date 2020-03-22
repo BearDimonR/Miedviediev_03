@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Controls;
 using Miedviediev_03.Managers;
 using Miedviediev_03.Models;
 using Miedviediev_03.Navigation;
+using Miedviediev_03.ViewModels.PersonVm;
 
 namespace Miedviediev_03.ViewModels 
 {
@@ -29,6 +27,33 @@ namespace Miedviediev_03.ViewModels
         public RelayCommand<object> CreateCommand { get; }
 
         public RelayCommand<object> SaveCommand { get; }
+
+        public RelayCommand<object> FilterCommand { get; }
+
+        private string _nameSearch;
+        public string NameSearch { set => _nameSearch = value; }
+
+        private string _surnameSearch;
+        public string SurnameSearch { set => _surnameSearch = value; }
+
+        private string _emailSearch;
+        public string EmailSearch { set => _emailSearch = value; }
+
+        private DateTime _dateSearch;
+        public DateTime DateSearch { set => _dateSearch = value; }
+
+        private BoolBoxType _isBirthdaySearch;
+        public BoolBoxType IsBirthdaySearch { set => _isBirthdaySearch = value; }
+
+        private BoolBoxType _isAdultSearch;
+        public BoolBoxType IsAdultSearch { set => _isAdultSearch = value; }
+
+        private WesternZodiac _westernZodiacSearch;
+        public WesternZodiac WesternZodiacSearch { set => _westernZodiacSearch = value; }
+
+        private ChineseZodiac _chineseZodiacSearch;
+        public ChineseZodiac ChineseZodiacSearch { set => _chineseZodiacSearch = value; }
+
         
         public DataGridVm()
         {
@@ -37,6 +62,14 @@ namespace Miedviediev_03.ViewModels
             EditCommand = new RelayCommand<Person>(EditPerson);
             CreateCommand = new RelayCommand<object>(CreatePerson);
             SaveCommand = new RelayCommand<object>(SavePersons);
+            FilterCommand = new RelayCommand<object>(FilterPersons);
+        }
+
+        private void FilterPersons(object obj)
+        {
+            Persons = new ObservableCollection<Person>(
+                StationManager.DataStorage.Filter(_nameSearch, _surnameSearch, _emailSearch, _dateSearch,
+                    _isBirthdaySearch, _isAdultSearch, _westernZodiacSearch, _chineseZodiacSearch));
         }
 
         public void Execute(params object[] obj)
@@ -44,16 +77,18 @@ namespace Miedviediev_03.ViewModels
             if (!(obj[0] is Person person)) return;
             if (obj.Length > 1 && obj[1] is int index)
             {
-                _persons.RemoveAt(index);
-                _persons.Insert(index, person);
+                StationManager.DataStorage.EditPerson(index, person);
             }
             else
-                _persons.Add(person);
+                StationManager.DataStorage.AddPerson(person);
+            Persons = new ObservableCollection<Person>(StationManager.DataStorage.PersonsList);
+            
         }
 
         private void DeletePerson(Person item)
         {
-            _persons.Remove(item);
+            StationManager.DataStorage.RemovePerson(item);
+            Persons = new ObservableCollection<Person>(StationManager.DataStorage.PersonsList);
         }
         
         private void EditPerson(Person selectedPerson)
@@ -70,7 +105,7 @@ namespace Miedviediev_03.ViewModels
         
         private void SavePersons(object obj)
         {
-            StationManager.DataStorage.SaveList(_persons.ToList());
+            StationManager.DataStorage.SaveList();
         }
     }
 }
