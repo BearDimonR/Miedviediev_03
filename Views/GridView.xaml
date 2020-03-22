@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="Miedviediev_03.Views.GridView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModels1="clr-namespace:Miedviediev_03.ViewModels"
+             xmlns:sorting="clr-namespace:Miedviediev_03.Sorting"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.DataContext>
+        <viewModels1:DataGridVm />
+    </UserControl.DataContext>
+    <StackPanel>
+        <TextBlock FontSize="30"
+                   FontStretch="Condensed"
+                   TextAlignment="Center">
+            Person's list
+        </TextBlock>
+        <StackPanel Orientation="Horizontal">
+            <DataGrid Name="DataGrid"
+                      SelectionMode="Single"
+                      Margin="30"
+                      Width="780"
+                      Height="400"
+                      ItemsSource="{Binding Persons, Mode=OneWay}"
+                      IsReadOnly="True"
+                      AutoGenerateColumns="False"
+                      sorting:DataGridSortBehaviour.AllowCustomSort="True">
+                <DataGrid.Resources>
+                    <Style TargetType="{x:Type DataGridCell}">
+                        <Style.Triggers>
+                            <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                <Setter Property="Background" Value="#DEFF88" />
+                                <Setter Property="Foreground" Value="Black" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" sorting:DataGridSortBehaviour.SortField="Name" />
+                    <DataGridTextColumn Header="Surname" Binding="{Binding Surname}" sorting:DataGridSortBehaviour.SortField="Surname"/>
+                    <DataGridTextColumn Header="Email" Binding="{Binding Email}" sorting:DataGridSortBehaviour.SortField="Email"/>
+                    <DataGridTextColumn Header="Birthday" Binding="{Binding Birthday}" sorting:DataGridSortBehaviour.SortField="Birthday"/>
+                    <DataGridCheckBoxColumn Header="IsBirthday" Binding="{Binding IsBirthday, Mode=OneWay}" sorting:DataGridSortBehaviour.SortField="IsBirthday"/>
+                    <DataGridCheckBoxColumn Header="IsAdult" Binding="{Binding IsAdult, Mode=OneWay}" sorting:DataGridSortBehaviour.SortField="IsAdult"/>
+                    <DataGridTextColumn Header="WesternZodiac" Binding="{Binding WesternZodiac}" sorting:DataGridSortBehaviour.SortField="WesternZodiac"/>
+                    <DataGridTextColumn Header="ChineseZodiac" Binding="{Binding ChineseSign}" sorting:DataGridSortBehaviour.SortField="ChineseZodiac"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Margin="10,10,10,10">
+                <StackPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Width" Value="90" />
+                        <Setter Property="Margin" Value="10, 50, 10 , 10" />
+                        <Setter Property="FontSize" Value="25" />
+                    </Style>
+                </StackPanel.Resources>
+                <Button Command="{Binding CreateCommand, Mode=OneTime}">Create</Button>
+                <Button
+                    IsEnabled="{Binding ElementName=DataGrid, Path=SelectedValue, TargetNullValue=false, Mode=OneWay}"
+                    Command="{Binding EditCommand, Mode=OneWay}"
+                    CommandParameter="{Binding ElementName=DataGrid, Path=SelectedItem, Mode=OneWay}">
+                    Edit
+                </Button>
+                <Button
+                    IsEnabled="{Binding ElementName=DataGrid, Path=SelectedValue, TargetNullValue=false, Mode=OneWay}"
+                    Command="{Binding DeleteCommand, Mode=OneWay}"
+                    CommandParameter="{Binding ElementName=DataGrid, Path=SelectedItem, Mode=OneWay}">
+                    Delete
+                </Button>
+                <Button
+                    Command="{Binding SaveCommand, Mode=OneWay}">
+                    Save
+                </Button>
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</UserControl>
